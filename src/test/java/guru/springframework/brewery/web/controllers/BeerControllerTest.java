@@ -88,20 +88,23 @@ class BeerControllerTest {
 
         BeerPagedList beerPagedList;
 
+        BeerDto beer4 = BeerDto.builder().id(UUID.randomUUID())
+                .version(1)
+                .beerName("Beer4")
+                .upc(123123123122L)
+                .beerStyle(BeerStyleEnum.PALE_ALE)
+                .price(new BigDecimal("12.99"))
+                .quantityOnHand(66)
+                .createdDate(OffsetDateTime.now())
+                .lastModifiedDate(OffsetDateTime.now())
+                .build();
+
         @BeforeEach
         void setUp() {
             List<BeerDto> beers = new ArrayList<>();
             beers.add(validBeer);
-            beers.add(BeerDto.builder().id(UUID.randomUUID())
-                    .version(1)
-                    .beerName("Beer4")
-                    .upc(123123123122L)
-                    .beerStyle(BeerStyleEnum.PALE_ALE)
-                    .price(new BigDecimal("12.99"))
-                    .quantityOnHand(66)
-                    .createdDate(OffsetDateTime.now())
-                    .lastModifiedDate(OffsetDateTime.now())
-                    .build());
+
+            beers.add(beer4);
 
             beerPagedList = new BeerPagedList(beers, PageRequest.of(1, 1), 2L);
 
@@ -117,7 +120,8 @@ class BeerControllerTest {
                     .andExpect(status().isOk())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                     .andExpect(jsonPath("$.content", hasSize(2)))
-                    .andExpect(jsonPath("$.content[0].id", is(validBeer.getId().toString())));
+                    .andExpect(jsonPath("$.content[0].id", is(validBeer.getId().toString())))
+                    .andExpect(jsonPath("$.content[1].id", is(beer4.getId().toString())));
         }
     }
 }
