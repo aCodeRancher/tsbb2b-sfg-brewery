@@ -20,7 +20,10 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
@@ -51,7 +54,8 @@ public class Customer extends BaseEntity {
     @Column(length = 36, columnDefinition = "varchar")
     private UUID apiKey;
 
-    @OneToMany(mappedBy = "customer")
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.PERSIST)
+    @Fetch(FetchMode.JOIN)
     private Set<BeerOrder> beerOrders;
 
 }

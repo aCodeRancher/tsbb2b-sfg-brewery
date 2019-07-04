@@ -67,13 +67,21 @@ class BeerOrderControllerTest {
     void listOrders() throws Exception{
 
         given(beerOrderService.listOrders(any(), any())).willReturn(beerOrderPagedList);
-        mockMvc.perform( get("/api/vi/customers/85d4506-e7dd-446e-a092-5f30b98e7b26/orders"))
+
+        mockMvc.perform( get("/api/v1/customers/85d4506-e7dd-446e-a092-5f30b98e7b26/orders"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8));
+
 
     }
 
     @Test
-    void getOrder() {
+    void getOrder() throws Exception{
+        given(beerOrderService.getOrderById(any(), any())).willReturn(beerOrder);
+        String orderId = beerOrder.getId().toString();
+        mockMvc.perform(get("/api/v1/customers/85d4506-e7dd-446e-a092-5f30b98e7b26/orders/"+orderId))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8));
+
     }
 }

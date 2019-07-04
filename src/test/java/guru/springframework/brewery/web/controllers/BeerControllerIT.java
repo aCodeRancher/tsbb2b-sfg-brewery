@@ -1,10 +1,14 @@
 package guru.springframework.brewery.web.controllers;
 
+import guru.springframework.brewery.web.model.BeerDto;
+import guru.springframework.brewery.web.model.BeerOrderDto;
 import guru.springframework.brewery.web.model.BeerPagedList;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+
+import java.util.Iterator;
 
 import static org.assertj.core.api.Java6Assertions.assertThat;
 
@@ -22,5 +26,7 @@ public class BeerControllerIT {
         BeerPagedList beerPagedList = restTemplate.getForObject("/api/v1/beer", BeerPagedList.class);
 
         assertThat(beerPagedList.getContent()).hasSize(3);
+        Iterator<BeerDto> itr = beerPagedList.getContent().iterator();
+        System.out.println(itr.next().getBeerName());
     }
 }
