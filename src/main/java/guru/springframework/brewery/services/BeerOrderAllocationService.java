@@ -34,7 +34,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Service to allocate inventory to orders.
- *
  */
 @Slf4j
 @Service
@@ -50,12 +49,12 @@ public class BeerOrderAllocationService {
 
     @Transactional
     @Scheduled(fixedRate = 5000) //run every 5 seconds
-    public void runBeerOrderAllocation(){
+    public void runBeerOrderAllocation() {
         log.debug("Starting Beer Order Allocation");
 
         List<BeerOrder> newOrders = beerOrderRepository.findAllByOrderStatus(OrderStatusEnum.NEW);
 
-        if (newOrders.size() > 0 ) {
+        if (newOrders.size() > 0) {
 
             log.debug("Number of orders found to allocate: " + newOrders.size());
 
@@ -73,7 +72,7 @@ public class BeerOrderAllocationService {
                     totalAllocated.set(totalAllocated.get() + beerOrderLine.getQuantityAllocated());
                 });
 
-                if(totalOrdered.get() == totalAllocated.get()){
+                if (totalOrdered.get() == totalAllocated.get()) {
                     log.debug("Order Completely Allocated: " + beerOrder.getCustomerRef());
                     beerOrder.setOrderStatus(OrderStatusEnum.READY);
                 }
@@ -92,11 +91,11 @@ public class BeerOrderAllocationService {
 
         beerInventoryList.forEach(beerInventory -> {
             int inventory = (beerInventory.getQuantityOnHand() == null) ? 0 : beerInventory.getQuantityOnHand();
-            int orderQty = (beerOrderLine.getOrderQuantity() == null) ? 0 : beerOrderLine.getOrderQuantity() ;
+            int orderQty = (beerOrderLine.getOrderQuantity() == null) ? 0 : beerOrderLine.getOrderQuantity();
             int allocatedQty = (beerOrderLine.getQuantityAllocated() == null) ? 0 : beerOrderLine.getQuantityAllocated();
             int qtyToAllocate = orderQty - allocatedQty;
 
-            if(inventory >= qtyToAllocate){ // full allocation
+            if (inventory >= qtyToAllocate) { // full allocation
                 inventory = inventory - qtyToAllocate;
                 beerOrderLine.setQuantityAllocated(orderQty);
                 beerInventory.setQuantityOnHand(inventory);

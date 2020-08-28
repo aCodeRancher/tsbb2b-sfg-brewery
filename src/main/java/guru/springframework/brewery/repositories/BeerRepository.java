@@ -29,7 +29,7 @@ import java.util.UUID;
  * Created by jt on 2019-01-26.
  */
 public interface BeerRepository extends JpaRepository<Beer, UUID> {
-    
+
     Page<Beer> findAllByBeerName(String beerName, PageRequest pageRequest);
 
     Page<Beer> findAllByBeerStyle(BeerStyleEnum beerStyle, PageRequest pageRequest);

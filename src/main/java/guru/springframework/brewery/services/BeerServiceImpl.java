@@ -70,7 +70,7 @@ public class BeerServiceImpl implements BeerService {
                 PageRequest
                         .of(beerPage.getPageable().getPageNumber(),
                                 beerPage.getPageable().getPageSize()),
-                                beerPage.getTotalElements());
+                beerPage.getTotalElements());
         return beerPagedList;
     }
 

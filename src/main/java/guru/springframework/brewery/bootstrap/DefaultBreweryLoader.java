@@ -38,15 +38,18 @@ public class DefaultBreweryLoader implements CommandLineRunner {
     private final BeerInventoryRepository beerInventoryRepository;
     private final BeerOrderRepository beerOrderRepository;
     private final CustomerRepository customerRepository;
+    private final BeerOrderLineRepository beerOrderLineRepository;
 
     public DefaultBreweryLoader(BreweryRepository breweryRepository,
                                 BeerRepository beerRepository, BeerInventoryRepository beerInventoryRepository,
-                                BeerOrderRepository beerOrderRepository, CustomerRepository customerRepository) {
+                                BeerOrderRepository beerOrderRepository, CustomerRepository customerRepository,
+                                BeerOrderLineRepository beerOrderLineRepository) {
         this.breweryRepository = breweryRepository;
         this.beerRepository = beerRepository;
         this.beerInventoryRepository = beerInventoryRepository;
         this.beerOrderRepository = beerOrderRepository;
         this.customerRepository = customerRepository;
+        this.beerOrderLineRepository = beerOrderLineRepository;
     }
 
     @Override
@@ -55,7 +58,7 @@ public class DefaultBreweryLoader implements CommandLineRunner {
     }
 
     private void loadBreweryData() {
-        if (breweryRepository.count() == 0){
+        if (breweryRepository.count() == 0) {
             breweryRepository.save(Brewery
                     .builder()
                     .breweryName("Cage Brewing")
@@ -112,20 +115,22 @@ public class DefaultBreweryLoader implements CommandLineRunner {
                     .build());
 
             Set<BeerOrderLine> orderLines1 = new HashSet<>();
-            orderLines1.add(BeerOrderLine.builder().beer(galaxyCat).orderQuantity(15).quantityAllocated(0).build());
-            orderLines1.add(BeerOrderLine.builder().beer(pinball).orderQuantity(7).quantityAllocated(0).build());
+            BeerOrderLine order1 = BeerOrderLine.builder().beer(galaxyCat).orderQuantity(15).quantityAllocated(0).build();
+            BeerOrderLine order2 = BeerOrderLine.builder().beer(pinball).orderQuantity(7).quantityAllocated(0).build();
+            orderLines1.add(order1);
+            orderLines1.add(order2);
 
-            BeerOrder testOrder1 = beerOrderRepository.save(BeerOrder.builder()
+            BeerOrder beerOrder = BeerOrder.builder().orderStatus(OrderStatusEnum.NEW).customer(testCustomer).customerRef("testOrder1")
+                    .orderStatusCallbackUrl("http://example.com/post").beerOrderLines(orderLines1).build();
+            /*BeerOrder testOrder1 = beerOrderRepository.save(BeerOrder.builder()
                     .orderStatus(OrderStatusEnum.NEW)
                     .customer(testCustomer)
                     .customerRef("testOrder1")
                     .orderStatusCallbackUrl("http://example.com/post")
                     .beerOrderLines(orderLines1)
-                    .build());
-
-            orderLines1.forEach(line -> line.setBeerOrder(testOrder1));
-
-            beerOrderRepository.save(testOrder1);
+                    .build());*/
+            orderLines1.forEach(line -> line.setBeerOrder(beerOrder));
+            beerOrderRepository.save(beerOrder);
         }
     }
 }

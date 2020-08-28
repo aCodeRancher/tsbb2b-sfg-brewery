@@ -33,10 +33,12 @@ public interface BeerOrderMapper {
 
     BeerOrderLineDto beerOrderLineToDto(BeerOrderLine line);
 
-    default BeerOrderLine dtoToBeerOrder(BeerOrderLineDto dto){
+    default BeerOrderLine dtoToBeerOrder(BeerOrderLineDto dto) {
         return BeerOrderLine.builder()
+
                 .orderQuantity(dto.getOrderQuantity())
                 .beer(Beer.builder().id(dto.getBeerId()).build())
+
                 .build();
     }
 }
