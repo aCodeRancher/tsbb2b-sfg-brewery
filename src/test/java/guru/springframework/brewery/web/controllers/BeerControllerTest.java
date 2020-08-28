@@ -66,14 +66,14 @@ class BeerControllerTest {
 
         given(beerService.findBeerById(any())).willReturn(validBeer);
 
-       MvcResult result=  mockMvc.perform(get("/api/v1/beer/" + validBeer.getId()))
+        MvcResult result = mockMvc.perform(get("/api/v1/beer/" + validBeer.getId()))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.id", is(validBeer.getId().toString())))
                 .andExpect(jsonPath("$.beerName", is("Beer1")))
                 .andExpect(jsonPath("$.createdDate",
                         is(dateTimeFormatter.format(validBeer.getCreatedDate()))))
-               .andReturn();
+                .andReturn();
 
         System.out.println(result.getResponse().getContentAsString());
 
@@ -119,7 +119,7 @@ class BeerControllerTest {
         @Test
         void testListBeers() throws Exception {
             mockMvc.perform(get("/api/v1/beer")
-                        .accept(MediaType.APPLICATION_JSON))
+                    .accept(MediaType.APPLICATION_JSON))
                     .andExpect(status().isOk())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                     .andExpect(jsonPath("$.content", hasSize(2)))

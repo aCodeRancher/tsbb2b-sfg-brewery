@@ -2,6 +2,8 @@ package guru.springframework.brewery.web.controllers;
 
 import guru.springframework.brewery.domain.Customer;
 import guru.springframework.brewery.repositories.CustomerRepository;
+
+import guru.springframework.brewery.web.model.BeerOrderDto;
 import guru.springframework.brewery.web.model.BeerOrderPagedList;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -9,16 +11,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 
+import java.util.Iterator;
+import java.util.List;
+
 import static org.assertj.core.api.Java6Assertions.assertThat;
 
-/**
- * Created by jt on 2019-03-12.
- */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class BeerOrderControllerIT {
+class BeerOrderControllerIT {
+
 
     @Autowired
-    private TestRestTemplate testRestTemplate;
+    private TestRestTemplate restTemplate;
 
     @Autowired
     CustomerRepository customerRepository;
@@ -31,11 +34,14 @@ public class BeerOrderControllerIT {
     }
 
     @Test
-    void testListOrders() {
-        String url = "/api/v1/customers/" + customer.getId().toString() + " /orders";
+    void getListOrders() {
 
-        BeerOrderPagedList pagedList = testRestTemplate.getForObject(url, BeerOrderPagedList.class);
+        String url = "/api/v1/customers/" + customer.getId().toString() + "/orders";
+        BeerOrderPagedList pagedList = restTemplate.getForObject(url, BeerOrderPagedList.class);
 
-        assertThat(pagedList.getContent()).hasSize(1);
+        List<BeerOrderDto> beerOrder = pagedList.getContent();
+        assertThat(beerOrder.size() == 1);
+        System.out.println(beerOrder.get(0).getCustomerId());
+
     }
 }
